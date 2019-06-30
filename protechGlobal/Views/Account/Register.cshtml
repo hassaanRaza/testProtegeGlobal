@@ -1,0 +1,84 @@
+﻿@{
+    ViewBag.Title = "Register";
+}
+<form id="registerForm">
+    <h2>Register yourself</h2>
+    <div class="form-group">
+        <label>Email</label>
+        <input id="email" type="email" class="form-control" placeholder="Enter your email.." required />
+    </div>
+    <div class="form-group">
+        <label>Password</label>
+        <input id="password" type="password" class="form-control" placeholder="Enter your password.." required />
+    </div>
+    <div class="form-group">
+        <label>Username</label>
+        <input id="username" type="text" class="form-control" placeholder="Enter your username.." required />
+    </div>
+    <div class="form-group">
+        <label>First Name</label>
+        <input id="firstName" type="text" class="form-control" placeholder="Enter your first name.." required />
+    </div>
+    <div class="form-group">
+        <label>Last Name</label>
+        <input id="lastName" type="text" class="form-control" placeholder="Enter your last name.." />
+    </div>
+    <div class="form-group">
+        <label>Age</label>
+        <input id="age" type="number" class="form-control" placeholder="Enter your age.." />
+    </div>
+    <div class="form-group">
+        <input id="register" type="submit" class="btn btn-success" value="Register" />
+    </div>
+    <div class="form-group">
+        @Html.ActionLink("Already Registered? Login from here", "Login")
+    </div>
+</form>
+@section scripts{
+    <script type='text/javascript'>
+        $(document).ready(function () {
+            function clearAll() {
+                $('#email').val('');
+                $('#password').val('');
+                $('#username').val('');
+                $('#firstName').val('');
+                $('#lastName').val('');
+                $('#age').val('');
+            }
+            //alert('test');
+            $('#register').click(function (e) {
+                e.preventDefault();
+                var User_PG = {
+                    Email: $('#email').val(),
+                    Password: $('#password').val(),
+                    Username: $('#username').val(),
+                    FirstName: $('#firstName').val(),
+                    LastName: $('#lastName').val(),
+                    Age: $('#age').val()
+                }
+                var valid = $('#registerForm')[0].checkValidity();
+                if (valid) {
+                    $.ajax({
+                        type: 'POST',
+                        url: '/Account/AddUser',
+                        data: JSON.stringify(User_PG),
+                        contentType: 'application/json;charset=utf-8',
+                        dataType: 'json',
+                        success: addUserSuccess,
+                        error: function () {
+                            alert('Error while adding data');
+                        }
+                    });
+                }
+
+            });
+            function addUserSuccess(response) {
+                if (response.status) {
+                    clearAll();
+                }
+                alert(response.message);
+                //console.log(response);
+            }
+        })
+    </script> 
+    }
